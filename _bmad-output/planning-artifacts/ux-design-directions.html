@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Skate Assistant — UX Design Directions · Direction A: Calm Floor</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    /* ═══════════════════════════════════════════════════════════
+       DESIGN TOKENS — Direction A "Calm Floor" (dark default)
+       ═══════════════════════════════════════════════════════════ */
+    :root {
+      /* Color — semantic */
+      --surface:           #08090B;
+      --surface-elevated:  #161618;
+      --surface-overlay:   #1F1F22;
+      --text-primary:      #F5F5F4;
+      --text-secondary:    #A1A1AA;
+      --text-muted:        #71717A;
+      --border:            #27272A;
+      --border-subtle:     #1F1F22;
+      --accent:            #F03A3A;
+      --accent-hover:      #FF5252;
+      --grounded:          #22C55E;   /* "success" — compatibility-validated */
+      --uncertain:         #F59E0B;   /* "warning" — confidence-boundary */
+      --error:             #EF4444;
+
+      /* Typography */
+      --font-sans: "Geist", system-ui, -apple-system, "Segoe UI", sans-serif;
+      --font-mono: "Geist Mono", "JetBrains Mono", "Fira Code", ui-monospace, monospace;
+
+      /* Spacing scale (4px base) */
+      --space-1: 4px;
+      --space-2: 8px;
+      --space-3: 12px;
+      --space-4: 16px;
+      --space-6: 24px;
+      --space-8: 32px;
+      --space-12: 48px;
+      --space-16: 64px;
+
+      /* Radius — minimal */
+      --radius-none: 0;
+      --radius-sm: 2px;
+      --radius-full: 999px;
+
+      /* Type scale */
+      --type-display-1: 700 40px/44px var(--font-sans);
+      --type-display-2: 700 32px/36px var(--font-sans);
+      --type-headline-1: 600 24px/28px var(--font-sans);
+      --type-headline-2: 600 20px/24px var(--font-sans);
+      --type-body-large: 400 16px/24px var(--font-sans);
+      --type-body: 400 14px/20px var(--font-sans);
+      --type-body-strong: 500 14px/20px var(--font-sans);
+      --type-caption: 400 12px/16px var(--font-sans);
+      --type-tag: 600 11px/16px var(--font-sans);
+      --type-mono-body: 500 14px/20px var(--font-mono);
+      --type-mono-caption: 500 12px/16px var(--font-mono);
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       BASE
+       ═══════════════════════════════════════════════════════════ */
+    *, *::before, *::after { box-sizing: border-box; }
+    html { font-family: var(--font-sans); -webkit-font-smoothing: antialiased; }
+    body {
+      margin: 0;
+      background: var(--surface);
+      color: var(--text-primary);
+      font: var(--type-body-large);
+      letter-spacing: 0;
+    }
+    button { font-family: inherit; }
+    a { color: var(--text-primary); text-decoration: none; }
+
+    /* ═══════════════════════════════════════════════════════════
+       SHOWCASE PAGE LAYOUT (this document only)
+       ═══════════════════════════════════════════════════════════ */
+    .showcase-header {
+      padding: var(--space-12) var(--space-8);
+      border-bottom: 1px solid var(--border);
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+    .showcase-eyebrow {
+      font: var(--type-tag);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      margin: 0 0 var(--space-3) 0;
+    }
+    .showcase-eyebrow .accent { color: var(--accent); }
+    .showcase-header h1 {
+      font: var(--type-display-1);
+      letter-spacing: -0.02em;
+      margin: 0 0 var(--space-3) 0;
+    }
+    .showcase-header p {
+      font: var(--type-body-large);
+      color: var(--text-secondary);
+      max-width: 60ch;
+      margin: 0;
+    }
+    .showcase-toc {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: var(--space-8) var(--space-8);
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-2);
+      border-bottom: 1px solid var(--border);
+    }
+    .showcase-toc a {
+      font: var(--type-tag);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: var(--space-2) var(--space-4);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      transition: all 0.15s;
+    }
+    .showcase-toc a:hover, .showcase-toc a:focus-visible {
+      color: var(--text-primary);
+      border-color: var(--text-primary);
+      outline: none;
+    }
+    main.showcase-main {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: var(--space-8);
+    }
+    .showcase-section { padding: var(--space-12) 0; border-bottom: 1px solid var(--border); }
+    .showcase-section:last-child { border-bottom: none; }
+    .showcase-section h2 {
+      font: var(--type-display-2);
+      letter-spacing: -0.02em;
+      margin: 0 0 var(--space-3) 0;
+    }
+    .showcase-section h3 {
+      font: var(--type-headline-1);
+      letter-spacing: -0.01em;
+      margin: var(--space-12) 0 var(--space-3) 0;
+    }
+    .showcase-section .lede {
+      font: var(--type-body-large);
+      color: var(--text-secondary);
+      max-width: 65ch;
+      margin: 0 0 var(--space-8) 0;
+    }
+    .showcase-pair {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--space-8);
+      margin-top: var(--space-6);
+    }
+    @media (min-width: 768px) {
+      .showcase-pair { grid-template-columns: 320px 1fr; }
+    }
+    .frame-label {
+      font: var(--type-tag);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin: 0 0 var(--space-3) 0;
+    }
+    .frame-caption {
+      font: var(--type-caption);
+      color: var(--text-secondary);
+      margin: var(--space-3) 0 0 0;
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       DEVICE FRAMES (showcase chrome only)
+       ═══════════════════════════════════════════════════════════ */
+    .device {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      position: relative;
+    }
+    .device-mobile { width: 320px; min-height: 600px; }
+    .device-desktop { width: 100%; min-height: 600px; }
+
+    /* ═══════════════════════════════════════════════════════════
+       SITE HEADER (the platform's global header — embedded chat)
+       ═══════════════════════════════════════════════════════════ */
+    .site-header {
+      display: flex;
+      align-items: center;
+      gap: var(--space-4);
+      padding: var(--space-3) var(--space-4);
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+      position: sticky;
+      top: 0;
+      z-index: 5;
+    }
+    .site-logo {
+      font: var(--type-tag);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-primary);
+      flex-shrink: 0;
+    }
+    .site-logo .accent { color: var(--accent); }
+    .site-nav {
+      display: none;
+      gap: var(--space-4);
+      font: var(--type-tag);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+    }
+    @media (min-width: 768px) { .site-nav { display: flex; } }
+    .header-chat-input {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: var(--space-2) var(--space-3);
+      background: var(--surface-elevated);
+      border: 1px solid var(--border);
+      min-height: 36px;
+    }
+    .header-chat-input .placeholder {
+      font: var(--type-body);
+      color: var(--text-muted);
+      flex: 1;
+    }
+    .header-chat-input .key-hint {
+      font: var(--type-mono-caption);
+      color: var(--text-muted);
+      padding: 2px 6px;
+      border: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .header-cart {
+      font: var(--type-tag);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      flex-shrink: 0;
+      padding: var(--space-2) var(--space-3);
+      border: 1px solid var(--border);
+      min-height: 36px;
+      display: flex;
+      align-items: center;
+    }
+    .ai-pill {
+      font: var(--type-tag);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      background: var(--surface-overlay);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      flex-shrink: 0;
+    }
+    .ai-pill::before {
+      content: "●";
+      color: var(--grounded);
+      margin-right: 4px;
+      font-size: 8px;
+      vertical-align: middle;
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       CONVERSATION STREAM
+       ═══════════════════════════════════════════════════════════ */
+    .conversation {
+      padding: var(--space-6) var(--space-4);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-6);
+    }
+    @media (min-width: 768px) {
+      .conversation { padding: var(--space-8); gap: var(--space-8); }
+    }
+    .msg-user, .msg-assistant {
+      max-width: 100%;
+    }
+    .msg-user .bubble {
+      background: var(--accent);
+      color: var(--text-primary);
+      padding: var(--space-3) var(--space-4);
+      font: var(--type-body-large);
+      max-width: 75%;
+      margin-left: auto;
+    }
+    .msg-assistant .ack {
+      font: var(--type-body-large);
+      color: var(--text-primary);
+      max-width: 75%;
+    }
+    .msg-assistant .ack-meta {
+      font: var(--type-caption);
+      color: var(--text-muted);
+      margin-top: var(--space-2);
+    }
+    .msg-assistant .ack-meta::before { content: "Assistant · "; }
+
+    /* ═══════════════════════════════════════════════════════════
+       SETUP-CARD-STACK (the signature pattern)
+       ═══════════════════════════════════════════════════════════ */
+    .setup-stack {
+      background: var(--surface-elevated);
+      border: 1px solid var(--border);
+      margin-top: var(--space-3);
+    }
+    .setup-stack-header {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      padding: var(--space-3) var(--space-4);
+      background: var(--surface-overlay);
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+    .setup-stack-title {
+      font: var(--type-headline-2);
+      flex: 1;
+      min-width: 200px;
+    }
+    .setup-stack-price {
+      font: var(--type-mono-body);
+      color: var(--text-primary);
+    }
+    .setup-stack-price::before { content: "·"; margin: 0 var(--space-2); color: var(--text-muted); }
+
+    .compat-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px var(--space-2);
+      font: var(--type-tag);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--grounded);
+      border: 1px solid var(--grounded);
+      background: rgba(34, 197, 94, 0.05);
+    }
+    .compat-chip::before { content: "✓"; font-weight: 700; }
+
+    .setup-stack-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+    @media (min-width: 768px) {
+      .setup-stack-grid { grid-template-columns: 1fr 1fr 1fr; }
+    }
+
+    .product-card {
+      padding: var(--space-4);
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+    }
+    @media (min-width: 768px) {
+      .product-card { border-bottom: none; border-right: 1px solid var(--border-subtle); }
+      .product-card:last-of-type { border-right: none; }
+    }
+    .product-image {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      background: var(--surface-overlay);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: var(--space-2);
+    }
+    .product-name {
+      font: var(--type-body-strong);
+      color: var(--text-primary);
+    }
+    .sticker-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 2px; }
+    .sticker-tag {
+      font: var(--type-tag);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 2px 6px;
+      background: var(--surface-overlay);
+      color: var(--text-secondary);
+      border: 1px solid var(--border);
+    }
+    .sticker-tag.in-stock {
+      color: var(--grounded);
+      border-color: var(--grounded);
+      background: rgba(34, 197, 94, 0.05);
+    }
+    .product-price {
+      font: var(--type-mono-body);
+      color: var(--text-primary);
+      margin-top: auto;
+    }
+
+    .setup-stack-rationale {
+      padding: var(--space-4);
+      border-top: 1px solid var(--border-subtle);
+      font: var(--type-body);
+      color: var(--text-secondary);
+    }
+    .setup-stack-rationale strong { color: var(--text-primary); font-weight: 500; }
+
+    .setup-stack-cta {
+      padding: var(--space-3) var(--space-4) var(--space-4);
+      border-top: 1px solid var(--border-subtle);
+    }
+    .btn-primary {
+      width: 100%;
+      min-height: 44px;
+      padding: var(--space-3) var(--space-4);
+      font: var(--type-body-strong);
+      background: var(--accent);
+      color: #fff;
+      border: 1px solid var(--accent);
+      cursor: pointer;
+      transition: background 0.12s;
+    }
+    .btn-primary:hover, .btn-primary:focus-visible {
+      background: var(--accent-hover);
+      outline: none;
+    }
+    .btn-primary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    .btn-secondary {
+      width: 100%;
+      min-height: 44px;
+      padding: var(--space-3) var(--space-4);
+      font: var(--type-body-strong);
+      background: transparent;
+      color: var(--text-primary);
+      border: 1px solid var(--border);
+      cursor: pointer;
+    }
+    .btn-secondary:hover { border-color: var(--text-primary); }
+
+    .setup-stack.lead {
+      box-shadow: 0 0 0 1px var(--accent);
+    }
+    .setup-stack.lead .setup-stack-header { background: var(--surface-overlay); }
+    .lead-flag {
+      font: var(--type-tag);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      padding: 2px var(--space-2);
+      border: 1px solid var(--accent);
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       STREAMING — skeleton + token-fill animation
+       ═══════════════════════════════════════════════════════════ */
+    .skeleton-line {
+      height: 12px;
+      background: var(--surface-overlay);
+      margin-bottom: var(--space-2);
+    }
+    .skeleton-line.w-90 { width: 90%; }
+    .skeleton-line.w-70 { width: 70%; }
+    .skeleton-line.w-40 { width: 40%; }
+    .skeleton-card {
+      padding: var(--space-4);
+      background: var(--surface-elevated);
+      border: 1px solid var(--border);
+    }
+
+    /* Streaming text simulation — character-typing animation */
+    .streaming-text {
+      font: var(--type-body);
+      color: var(--text-secondary);
+      display: inline-block;
+      overflow: hidden;
+      white-space: nowrap;
+      border-right: 2px solid var(--accent);
+      animation: stream 3.6s steps(60) 0.4s 1 normal both, blink 0.8s steps(2) infinite;
+      width: 0;
+      max-width: 100%;
+    }
+    .streaming-text.no-cursor { border-right: none; animation: stream 3.6s steps(60) 0.4s 1 normal both; }
+    @keyframes stream { from { width: 0; } to { width: 100%; } }
+    @keyframes blink { from { border-right-color: var(--accent); } to { border-right-color: transparent; } }
+
+    @media (prefers-reduced-motion: reduce) {
+      .streaming-text { width: 100%; animation: none; border-right: none; white-space: normal; }
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       CONFIDENCE-BOUNDARY DISCLOSURE
+       ═══════════════════════════════════════════════════════════ */
+    .confidence-disclosure {
+      background: var(--surface-overlay);
+      border-left: 3px solid var(--uncertain);
+      padding: var(--space-3) var(--space-4);
+      margin-top: var(--space-3);
+      max-width: 65ch;
+    }
+    .confidence-disclosure-label {
+      font: var(--type-tag);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--uncertain);
+      margin: 0 0 var(--space-2) 0;
+    }
+    .confidence-disclosure-body {
+      font: var(--type-body);
+      color: var(--text-primary);
+      margin: 0;
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       BOTTOM SHEET (cart-add confirmation, mobile)
+       ═══════════════════════════════════════════════════════════ */
+    .bottom-sheet {
+      background: var(--surface-elevated);
+      border-top: 1px solid var(--border);
+      padding: var(--space-4);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+    }
+    .bottom-sheet-grip {
+      width: 36px;
+      height: 4px;
+      background: var(--border);
+      margin: 0 auto var(--space-3) auto;
+    }
+    .bottom-sheet-title {
+      font: var(--type-headline-2);
+      margin: 0;
+    }
+    .bottom-sheet-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      border-top: 1px solid var(--border-subtle);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .bottom-sheet-list li {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: var(--space-3) 0;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .bottom-sheet-list li:last-child { border-bottom: none; }
+    .bottom-sheet-list .name { font: var(--type-body); color: var(--text-primary); }
+    .bottom-sheet-list .price { font: var(--type-mono-body); color: var(--text-primary); }
+    .bottom-sheet-total {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: var(--space-2) 0;
+    }
+    .bottom-sheet-total .label {
+      font: var(--type-tag);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+    }
+    .bottom-sheet-total .value {
+      font: var(--type-headline-2);
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       DEGRADED-MODE PANEL
+       ═══════════════════════════════════════════════════════════ */
+    .degraded-panel {
+      background: var(--surface-elevated);
+      border: 1px solid var(--border);
+      padding: var(--space-6) var(--space-4);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+    }
+    .degraded-panel-eyebrow {
+      font: var(--type-tag);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin: 0;
+    }
+    .degraded-panel h3 {
+      font: var(--type-headline-1);
+      letter-spacing: -0.01em;
+      margin: 0;
+    }
+    .degraded-panel-search {
+      display: flex;
+      gap: var(--space-2);
+      border: 1px solid var(--border);
+      padding: var(--space-3);
+      background: var(--surface);
+      align-items: center;
+    }
+    .degraded-panel-search input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: var(--text-primary);
+      font: var(--type-body-large);
+    }
+    .degraded-panel-search input:focus { outline: none; }
+    .degraded-panel-search button {
+      font: var(--type-body-strong);
+      background: var(--text-primary);
+      color: var(--surface);
+      border: none;
+      padding: var(--space-2) var(--space-4);
+      cursor: pointer;
+      min-height: 36px;
+    }
+    .degraded-panel p {
+      font: var(--type-body);
+      color: var(--text-secondary);
+      margin: 0;
+      max-width: 60ch;
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       TOKEN REFERENCE GRID
+       ═══════════════════════════════════════════════════════════ */
+    .swatch-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: var(--space-3); }
+    .swatch {
+      border: 1px solid var(--border);
+      padding: var(--space-3);
+      background: var(--surface-elevated);
+    }
+    .swatch-color {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      margin-bottom: var(--space-2);
+      border: 1px solid var(--border);
+    }
+    .swatch-name { font: var(--type-mono-caption); color: var(--text-primary); }
+    .swatch-value { font: var(--type-mono-caption); color: var(--text-muted); }
+
+    .type-spec {
+      padding: var(--space-3);
+      border: 1px solid var(--border);
+      background: var(--surface-elevated);
+      margin-bottom: var(--space-3);
+    }
+    .type-spec-meta { font: var(--type-mono-caption); color: var(--text-muted); margin-bottom: var(--space-2); }
+    .type-spec-display-1 { font: var(--type-display-1); letter-spacing: -0.02em; }
+    .type-spec-display-2 { font: var(--type-display-2); letter-spacing: -0.02em; }
+    .type-spec-headline-1 { font: var(--type-headline-1); letter-spacing: -0.01em; }
+    .type-spec-headline-2 { font: var(--type-headline-2); }
+    .type-spec-body-large { font: var(--type-body-large); }
+    .type-spec-body { font: var(--type-body); }
+    .type-spec-tag { font: var(--type-tag); letter-spacing: 0.1em; text-transform: uppercase; }
+    .type-spec-mono { font: var(--type-mono-body); }
+
+    /* ═══════════════════════════════════════════════════════════
+       DESKTOP — chat surface in-context
+       ═══════════════════════════════════════════════════════════ */
+    .desktop-shell .conversation { max-width: 900px; margin: 0 auto; padding: var(--space-8) var(--space-8); }
+
+    /* SVG board placeholders */
+    .svg-deck { width: 100%; max-width: 80px; opacity: 0.6; }
+    .svg-trucks { width: 100%; max-width: 70px; opacity: 0.6; }
+    .svg-wheel { width: 100%; max-width: 56px; opacity: 0.6; }
+
+    /* Note callout */
+    .note {
+      background: var(--surface-overlay);
+      border-left: 3px solid var(--text-muted);
+      padding: var(--space-3) var(--space-4);
+      font: var(--type-body);
+      color: var(--text-secondary);
+      max-width: 65ch;
+    }
+    .note strong { color: var(--text-primary); font-weight: 500; }
+
+  </style>
+</head>
+<body>
+  <header class="showcase-header">
+    <p class="showcase-eyebrow">UX Design Directions · <span class="accent">Direction A — Calm Floor</span></p>
+    <h1>Skate-Ecommerce AI Shopping Assistant</h1>
+    <p>Design-direction showcase for stakeholder review. Demonstrates the recommended visual register (Direction A "Calm Floor") with the two selective borrowings: sticker-tag treatment on attribute chips (from Direction B) and a lead-card hero emphasis (from Direction C). All tokens pulled from the Visual Foundation step. Use this file alongside the UX specification document as the implementation reference.</p>
+  </header>
+
+  <nav class="showcase-toc">
+    <a href="#chat-mobile">1 · Chat Surface (mobile)</a>
+    <a href="#chat-desktop">2 · Chat Surface (desktop)</a>
+    <a href="#stack">3 · SetupCardStack</a>
+    <a href="#streaming">4 · Streaming behavior</a>
+    <a href="#confidence">5 · Confidence-boundary</a>
+    <a href="#bottom-sheet">6 · Cart-add bottom sheet</a>
+    <a href="#degraded">7 · Degraded-mode panel</a>
+    <a href="#tokens">8 · Token reference</a>
+  </nav>
+
+  <main class="showcase-main">
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <section class="showcase-section" id="chat-mobile">
+      <h2>1 · Chat Surface — mobile (Maya's first turn)</h2>
+      <p class="lede">320 px viewport. Persistent embedded chat input in the global header, conversation thread below, recommendation cards stack vertically. The first card is the "lead recommendation" — accent border, subtle elevation. Demonstrates the calm-authority register with sticker-tag attribute chips and the compatibility-validated chip.</p>
+
+      <div class="device device-mobile">
+        <header class="site-header">
+          <span class="site-logo">SKATE<span class="accent">·</span>CO</span>
+          <div class="header-chat-input">
+            <span class="placeholder">Ask the assistant</span>
+            <span class="key-hint">/</span>
+          </div>
+          <span class="ai-pill">Assistant</span>
+        </header>
+
+        <div class="conversation">
+          <div class="msg-user">
+            <div class="bubble">durable street setup, intermediate, around $200</div>
+          </div>
+
+          <div class="msg-assistant">
+            <p class="ack">Got it — pulling some setups for that.</p>
+            <p class="ack-meta">Three results, all compatibility-validated</p>
+          </div>
+
+          <!-- Lead setup -->
+          <div class="setup-stack lead">
+            <div class="setup-stack-header">
+              <span class="lead-flag">Best balance</span>
+              <span class="setup-stack-title">Beginner Street Setup</span>
+              <span class="compat-chip">Setup validated</span>
+            </div>
+            <div class="setup-stack-grid">
+              <div class="product-card">
+                <div class="product-image">
+                  <svg class="svg-deck" viewBox="0 0 80 28" fill="none">
+                    <ellipse cx="40" cy="14" rx="38" ry="11" stroke="currentColor" stroke-width="1.5"/>
+                    <line x1="2" y1="14" x2="78" y2="14" stroke="currentColor" stroke-width="0.8" opacity="0.4"/>
+                  </svg>
+                </div>
+                <div class="product-name">Element Greyson 8.0"</div>
+                <div class="sticker-tags">
+                  <span class="sticker-tag">Street</span>
+                  <span class="sticker-tag in-stock">In stock</span>
+                </div>
+                <div class="product-price">$59.99</div>
+              </div>
+              <div class="product-card">
+                <div class="product-image">
+                  <svg class="svg-trucks" viewBox="0 0 70 28" fill="none">
+                    <rect x="8" y="10" width="54" height="8" stroke="currentColor" stroke-width="1.5"/>
+                    <circle cx="14" cy="14" r="4" stroke="currentColor" stroke-width="1.2"/>
+                    <circle cx="56" cy="14" r="4" stroke="currentColor" stroke-width="1.2"/>
+                  </svg>
+                </div>
+                <div class="product-name">Independent Stage 11 · 139mm</div>
+                <div class="sticker-tags">
+                  <span class="sticker-tag">Pairs 8.0"</span>
+                  <span class="sticker-tag in-stock">In stock</span>
+                </div>
+                <div class="product-price">$52.00</div>
+              </div>
+              <div class="product-card">
+                <div class="product-image">
+                  <svg class="svg-wheel" viewBox="0 0 56 56" fill="none">
+                    <circle cx="28" cy="28" r="22" stroke="currentColor" stroke-width="1.5"/>
+                    <circle cx="28" cy="28" r="6" stroke="currentColor" stroke-width="1"/>
+                  </svg>
+                </div>
+                <div class="product-name">Spitfire Formula Four 99a · 54mm</div>
+                <div class="sticker-tags">
+                  <span class="sticker-tag">Street</span>
+                  <span class="sticker-tag">99a</span>
+                </div>
+                <div class="product-price">$36.00</div>
+              </div>
+            </div>
+            <div class="setup-stack-rationale">
+              <strong>Forgiving for tricks but stable enough to cruise.</strong> The 8.0" Element is durable for street, the 139s match the deck width exactly, and the 99a Spitfires are slightly grippier than pure street wheels — better on rough pavement.
+            </div>
+            <div class="setup-stack-cta">
+              <button class="btn-primary">Add complete setup · $147.99</button>
+            </div>
+          </div>
+
+          <!-- Alt 1 -->
+          <div class="setup-stack">
+            <div class="setup-stack-header">
+              <span class="setup-stack-title">Lighter Park Setup</span>
+              <span class="setup-stack-price">$162.50</span>
+              <span class="compat-chip">Setup validated</span>
+            </div>
+            <div class="setup-stack-rationale">
+              <strong>Easier pop, less stability.</strong> Smaller deck (7.875") and softer 97a wheels for park transitions. Trade-off: less forgiving on street.
+            </div>
+            <div class="setup-stack-cta">
+              <button class="btn-secondary">View setup details</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p class="frame-caption">Note: the second/third recommendation cards are shown in compact form above. In production, all three render as full SetupCardStack views by default; the user can collapse alternatives via "View setup details."</p>
+    </section>
+
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <section class="showcase-section" id="chat-desktop">
+      <h2>2 · Chat Surface — desktop (lead recommendation)</h2>
+      <p class="lede">Wide viewport. SetupCardStack renders horizontally — three product cards side by side under a unified header strip and a single "Add complete setup" CTA. Demonstrates the lead-card hero emphasis (Direction C borrowing): the lead card has accent-bordered framing and a "Best balance" flag.</p>
+
+      <div class="device device-desktop desktop-shell">
+        <header class="site-header">
+          <span class="site-logo">SKATE<span class="accent">·</span>CO</span>
+          <nav class="site-nav">
+            <a>Decks</a><a>Trucks</a><a>Wheels</a><a>Hardware</a><a>Apparel</a>
+          </nav>
+          <div class="header-chat-input">
+            <span class="placeholder">Ask the assistant — "durable street setup, intermediate, around $200"</span>
+            <span class="key-hint">/</span>
+          </div>
+          <span class="header-cart">Cart · 0</span>
+        </header>
+
+        <div class="conversation">
+          <div class="msg-user">
+            <div class="bubble">durable street setup, intermediate, around $200</div>
+          </div>
+
+          <div class="msg-assistant">
+            <p class="ack">Got it — pulling some setups for that.</p>
+            <p class="ack-meta">Three results, all compatibility-validated</p>
+          </div>
+
+          <div class="setup-stack lead">
+            <div class="setup-stack-header">
+              <span class="lead-flag">Best balance</span>
+              <span class="setup-stack-title">Beginner Street Setup</span>
+              <span class="setup-stack-price">$147.99</span>
+              <span class="compat-chip">Setup validated</span>
+            </div>
+            <div class="setup-stack-grid">
+              <div class="product-card">
+                <div class="product-image">
+                  <svg class="svg-deck" viewBox="0 0 80 28" fill="none">
+                    <ellipse cx="40" cy="14" rx="38" ry="11" stroke="currentColor" stroke-width="1.5"/>
+                    <line x1="2" y1="14" x2="78" y2="14" stroke="currentColor" stroke-width="0.8" opacity="0.4"/>
+                  </svg>
+                </div>
+                <div class="product-name">Element Greyson 8.0"</div>
+                <div class="sticker-tags">
+                  <span class="sticker-tag">Street</span>
+                  <span class="sticker-tag">Beginner</span>
+                  <span class="sticker-tag in-stock">In stock</span>
+                </div>
+                <div class="product-price">$59.99</div>
+              </div>
+              <div class="product-card">
+                <div class="product-image">
+                  <svg class="svg-trucks" viewBox="0 0 70 28" fill="none">
+                    <rect x="8" y="10" width="54" height="8" stroke="currentColor" stroke-width="1.5"/>
+                    <circle cx="14" cy="14" r="4" stroke="currentColor" stroke-width="1.2"/>
+                    <circle cx="56" cy="14" r="4" stroke="currentColor" stroke-width="1.2"/>
+                  </svg>
+                </div>
+                <div class="product-name">Independent Stage 11 · 139mm</div>
+                <div class="sticker-tags">
+                  <span class="sticker-tag">Pairs 8.0"</span>
+                  <span class="sticker-tag in-stock">In stock</span>
+                </div>
+                <div class="product-price">$52.00</div>
+              </div>
+              <div class="product-card">
+                <div class="product-image">
+                  <svg class="svg-wheel" viewBox="0 0 56 56" fill="none">
+                    <circle cx="28" cy="28" r="22" stroke="currentColor" stroke-width="1.5"/>
+                    <circle cx="28" cy="28" r="6" stroke="currentColor" stroke-width="1"/>
+                  </svg>
+                </div>
+                <div class="product-name">Spitfire Formula Four 99a · 54mm</div>
+                <div class="sticker-tags">
+                  <span class="sticker-tag">Street</span>
+                  <span class="sticker-tag">99a · 54mm</span>
+                </div>
+                <div class="product-price">$36.00</div>
+              </div>
+            </div>
+            <div class="setup-stack-rationale">
+              <strong>Forgiving for tricks but stable enough to cruise.</strong> The 8.0" Element is durable for street, the 139s match the deck width exactly, and the 99a Spitfires are slightly grippier than pure street wheels — better on rough pavement.
+            </div>
+            <div class="setup-stack-cta">
+              <button class="btn-primary">Add complete setup · $147.99</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p class="frame-caption">The lead card uses a 1 px accent shadow plus the "Best balance" flag to elevate it visually without breaking the calm register. Two additional setups would render below at standard weight.</p>
+    </section>
+
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <section class="showcase-section" id="stack">
+      <h2>3 · SetupCardStack — pattern detail</h2>
+      <p class="lede">The signature component. Treats three SKUs (deck + trucks + wheels) as one buyable unit with: shared border, unified header strip, compatibility-validated chip, three sub-cards visually unified, why-this rationale, single accent CTA at the bottom.</p>
+
+      <h3>Anatomy</h3>
+      <div class="note">
+        <strong>Header strip</strong> · setup name, total price (mono), Setup-validated chip (`grounded` token).<br>
+        <strong>Sub-cards</strong> · deck · trucks · wheels — each with hero image, product name, sticker tags, mono price.<br>
+        <strong>Rationale</strong> · 1–2 sentence why-this in skater vernacular; trade-offs called out.<br>
+        <strong>CTA</strong> · single accent button. Primary action: "Add complete setup · $XXX.XX". Secondary action ("View setup details") only on alternative recommendations.
+      </div>
+
+      <h3>Mobile vs. Desktop</h3>
+      <p class="lede">Same component, two layouts. Mobile stacks the sub-cards vertically; desktop renders them horizontally in a 3-column grid. Touch targets remain ≥ 44 × 44 px on both.</p>
+    </section>
+
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <section class="showcase-section" id="streaming">
+      <h2>4 · Streaming behavior — skeleton → token-fill → final</h2>
+      <p class="lede">When the user sends a message, an acknowledgement token streams in (≤ 1 s), then a skeleton recommendation card appears with real card framing. As tokens arrive, the rationale text fills in left-to-right while the rest of the card hydrates. Animation respects <code>prefers-reduced-motion</code>.</p>
+
+      <h3>Live preview — streaming rationale</h3>
+      <div class="setup-stack" style="max-width: 640px;">
+        <div class="setup-stack-header">
+          <span class="setup-stack-title">Beginner Street Setup</span>
+          <span class="setup-stack-price">$147.99</span>
+          <span class="compat-chip">Setup validated</span>
+        </div>
+        <div class="setup-stack-rationale">
+          <span class="streaming-text">Forgiving for tricks but stable enough to cruise. The 8.0" Element is durable for street ride.</span>
+        </div>
+        <div class="setup-stack-cta">
+          <button class="btn-primary">Add complete setup · $147.99</button>
+        </div>
+      </div>
+
+      <h3>Skeleton state (pre-stream)</h3>
+      <div class="setup-stack" style="max-width: 640px;">
+        <div class="setup-stack-header">
+          <span class="setup-stack-title">&nbsp;</span>
+          <span class="compat-chip">Setup validated</span>
+        </div>
+        <div class="setup-stack-rationale">
+          <div class="skeleton-line w-90"></div>
+          <div class="skeleton-line w-70"></div>
+          <div class="skeleton-line w-40"></div>
+        </div>
+        <div class="setup-stack-cta">
+          <button class="btn-primary" disabled style="opacity: 0.5;">Loading…</button>
+        </div>
+      </div>
+
+      <p class="frame-caption">No spinner, no "thinking…" animation. Skeleton communicates *the system is working*; the streamed text communicates *the answer is composing*. Both patterns honor the calm-authority principle.</p>
+    </section>
+
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <section class="showcase-section" id="confidence">
+      <h2>5 · ConfidenceBoundaryDisclosure (Diego's case)</h2>
+      <p class="lede">When the LLM has matched on some attributes but the catalog is missing others, the system says so calmly. Visually distinct from a generic error: <code>uncertain</code> token (amber), left accent line, calm copy. The recommendation still ships — this is *honest framing*, not a failure state.</p>
+
+      <div class="setup-stack" style="max-width: 640px;">
+        <div class="setup-stack-header">
+          <span class="setup-stack-title">Bushings · medium-soft, 88a–90a band</span>
+          <span class="setup-stack-price">$11.99–$24.00</span>
+        </div>
+        <div class="setup-stack-rationale">
+          Three options that match the size and durometer band you described. Bones Hardcore Medium 88a · Riptide APS 90a · Independent stock 90a.
+        </div>
+        <div class="confidence-disclosure" style="margin: 0 var(--space-4) var(--space-4);">
+          <p class="confidence-disclosure-label">Partial match</p>
+          <p class="confidence-disclosure-body">I matched on the size (Indy 149) and medium-soft durometer band you described. Our catalog doesn't have an explicit "downhill" tag for these yet, so I can't be 100% sure they handle high-speed dive the way you want — but the durometer and shape are correct for your trucks.</p>
+        </div>
+        <div class="setup-stack-cta">
+          <button class="btn-secondary">Compare side by side</button>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <section class="showcase-section" id="bottom-sheet">
+      <h2>6 · Cart-add bottom sheet (mobile)</h2>
+      <p class="lede">Final confirmation before any cart write. Bottom-sheet pattern keeps the chat surface visible above; user can dismiss without leaving the conversation. Idempotency keys and all-or-nothing setup-add semantics are invisible to the user — the UI just shows SKUs, stock, total, and a single confirmation action.</p>
+
+      <div class="device device-mobile">
+        <header class="site-header">
+          <span class="site-logo">SKATE<span class="accent">·</span>CO</span>
+          <div class="header-chat-input">
+            <span class="placeholder">Ask the assistant</span>
+            <span class="key-hint">/</span>
+          </div>
+          <span class="ai-pill">Assistant</span>
+        </header>
+
+        <div style="padding: var(--space-4); opacity: 0.4;">
+          <p style="font: var(--type-caption); color: var(--text-muted);">[Conversation behind, dimmed…]</p>
+        </div>
+
+        <div class="bottom-sheet">
+          <div class="bottom-sheet-grip"></div>
+          <h3 class="bottom-sheet-title">Add this setup?</h3>
+          <ul class="bottom-sheet-list">
+            <li><span class="name">Element Greyson 8.0"</span><span class="price">$59.99</span></li>
+            <li><span class="name">Independent Stage 11 · 139mm</span><span class="price">$52.00</span></li>
+            <li><span class="name">Spitfire Formula Four 99a · 54mm</span><span class="price">$36.00</span></li>
+          </ul>
+          <div class="bottom-sheet-total">
+            <span class="label">Total</span>
+            <span class="value">$147.99</span>
+          </div>
+          <button class="btn-primary">Confirm and add to cart</button>
+          <button class="btn-secondary">Keep looking</button>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <section class="showcase-section" id="degraded">
+      <h2>7 · DegradedModePanel (LLM circuit-breaker tripped)</h2>
+      <p class="lede">When the LLM provider is unavailable or sustained tail latency exceeds threshold, the assistant gracefully falls back to the existing keyword-search experience. Critical UX: framed as confident, not failed. The user's last query is pre-filled. No alarm icons, no error tones.</p>
+
+      <div class="device device-desktop" style="max-width: 760px; margin: 0;">
+        <header class="site-header">
+          <span class="site-logo">SKATE<span class="accent">·</span>CO</span>
+          <nav class="site-nav">
+            <a>Decks</a><a>Trucks</a><a>Wheels</a><a>Hardware</a><a>Apparel</a>
+          </nav>
+          <div class="header-chat-input">
+            <span class="placeholder">Ask the assistant</span>
+            <span class="key-hint">/</span>
+          </div>
+          <span class="header-cart">Cart · 0</span>
+        </header>
+
+        <div style="padding: var(--space-8);">
+          <div class="degraded-panel">
+            <p class="degraded-panel-eyebrow">Assistant temporarily unavailable</p>
+            <h3>Search by keyword while the assistant is busy.</h3>
+            <div class="degraded-panel-search">
+              <input type="text" value="durable street setup" aria-label="Search the catalog">
+              <button>Search</button>
+            </div>
+            <p>Your last query is pre-filled. The assistant will be back shortly — meanwhile, search the catalog directly.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <section class="showcase-section" id="tokens">
+      <h2>8 · Design tokens reference</h2>
+      <p class="lede">The token values in this showcase. Implementations should reference these by token name, not raw value — light-theme variants live in the corresponding CSS variables and are not shown here.</p>
+
+      <h3>Color — semantic</h3>
+      <div class="swatch-grid">
+        <div class="swatch"><div class="swatch-color" style="background: var(--surface);"></div><div class="swatch-name">surface</div><div class="swatch-value">#08090B</div></div>
+        <div class="swatch"><div class="swatch-color" style="background: var(--surface-elevated);"></div><div class="swatch-name">surface-elevated</div><div class="swatch-value">#161618</div></div>
+        <div class="swatch"><div class="swatch-color" style="background: var(--surface-overlay);"></div><div class="swatch-name">surface-overlay</div><div class="swatch-value">#1F1F22</div></div>
+        <div class="swatch"><div class="swatch-color" style="background: var(--text-primary);"></div><div class="swatch-name">text-primary</div><div class="swatch-value">#F5F5F4</div></div>
+        <div class="swatch"><div class="swatch-color" style="background: var(--text-secondary);"></div><div class="swatch-name">text-secondary</div><div class="swatch-value">#A1A1AA</div></div>
+        <div class="swatch"><div class="swatch-color" style="background: var(--text-muted);"></div><div class="swatch-name">text-muted</div><div class="swatch-value">#71717A</div></div>
+        <div class="swatch"><div class="swatch-color" style="background: var(--accent);"></div><div class="swatch-name">accent (Signal Red)</div><div class="swatch-value">#F03A3A</div></div>
+        <div class="swatch"><div class="swatch-color" style="background: var(--grounded);"></div><div class="swatch-name">grounded (success)</div><div class="swatch-value">#22C55E</div></div>
+        <div class="swatch"><div class="swatch-color" style="background: var(--uncertain);"></div><div class="swatch-name">uncertain (warning)</div><div class="swatch-value">#F59E0B</div></div>
+        <div class="swatch"><div class="swatch-color" style="background: var(--error);"></div><div class="swatch-name">error</div><div class="swatch-value">#EF4444</div></div>
+      </div>
+
+      <h3>Typography — scale</h3>
+      <div class="type-spec">
+        <p class="type-spec-meta">display-1 · 40 / 44 · weight 700 · tracking -0.02em</p>
+        <p class="type-spec-display-1">Durable street setup, $200</p>
+      </div>
+      <div class="type-spec">
+        <p class="type-spec-meta">display-2 · 32 / 36 · weight 700 · tracking -0.02em</p>
+        <p class="type-spec-display-2">Three setups, all compatibility-validated</p>
+      </div>
+      <div class="type-spec">
+        <p class="type-spec-meta">headline-1 · 24 / 28 · weight 600 · tracking -0.01em</p>
+        <p class="type-spec-headline-1">Beginner Street Setup</p>
+      </div>
+      <div class="type-spec">
+        <p class="type-spec-meta">headline-2 · 20 / 24 · weight 600</p>
+        <p class="type-spec-headline-2">Element Greyson 8.0"</p>
+      </div>
+      <div class="type-spec">
+        <p class="type-spec-meta">body-large · 16 / 24 · weight 400</p>
+        <p class="type-spec-body-large">Forgiving for tricks but stable enough to cruise. The 8.0" Element is durable for street.</p>
+      </div>
+      <div class="type-spec">
+        <p class="type-spec-meta">body · 14 / 20 · weight 400</p>
+        <p class="type-spec-body">Three options that match the size and durometer band you described.</p>
+      </div>
+      <div class="type-spec">
+        <p class="type-spec-meta">tag · 11 / 16 · weight 600 · tracking 0.1em · uppercase</p>
+        <p class="type-spec-tag">In stock · Pairs 8.0" · Beginner</p>
+      </div>
+      <div class="type-spec">
+        <p class="type-spec-meta">mono-body · 14 / 20 · weight 500 · monospace</p>
+        <p class="type-spec-mono">$147.99 · 8.0" · 139mm · 99a · 54mm</p>
+      </div>
+
+      <h3>Spacing scale (4 px base)</h3>
+      <div class="note">
+        <strong>space-1</strong> 4px · <strong>space-2</strong> 8px · <strong>space-3</strong> 12px · <strong>space-4</strong> 16px · <strong>space-6</strong> 24px · <strong>space-8</strong> 32px · <strong>space-12</strong> 48px · <strong>space-16</strong> 64px<br>
+        Touch-target floor: <strong>44 × 44 px</strong> on every interactive element.
+      </div>
+
+      <h3>Component recipes (this file)</h3>
+      <div class="note">
+        <strong>SetupCardStack</strong> · <code>.setup-stack</code> · with <code>.lead</code> modifier for the primary recommendation.<br>
+        <strong>CompatibilityChip</strong> · <code>.compat-chip</code> — green border + check, "grounded" token semantics.<br>
+        <strong>StickerTag</strong> · <code>.sticker-tag</code> · with <code>.in-stock</code> modifier for grounded color.<br>
+        <strong>ConfidenceBoundaryDisclosure</strong> · <code>.confidence-disclosure</code> — "uncertain" left border, calm copy.<br>
+        <strong>BottomSheet</strong> · <code>.bottom-sheet</code> — mobile cart-add confirmation pattern.<br>
+        <strong>DegradedModePanel</strong> · <code>.degraded-panel</code> — circuit-breaker fallback to keyword search.
+      </div>
+    </section>
+
+  </main>
+
+  <footer style="max-width: 1280px; margin: 0 auto; padding: var(--space-12) var(--space-8); border-top: 1px solid var(--border); color: var(--text-muted); font: var(--type-caption);">
+    UX Design Directions — Skate-Ecommerce AI Shopping Assistant · 2026-05-06 · Direction A "Calm Floor" · See <code>ux-design-specification.md</code> for the full spec.
+  </footer>
+
+</body>
+</html>

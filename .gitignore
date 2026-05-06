@@ -1,0 +1,157 @@
+# ------------------------------
+
+# General
+
+# ------------------------------
+
+.DS_Store
+Thumbs.db
+*.log
+*.tmp
+*.swp
+*.swo
+
+# ------------------------------
+
+# Environment variables (CRÍTICO)
+
+# ------------------------------
+
+.env
+.env.*
+!.env.example
+
+# ------------------------------
+
+# Node / Next.js
+
+# ------------------------------
+
+node_modules/
+.pnpm-store/
+.next/
+out/
+dist/
+build/
+
+# Logs
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Vercel
+
+.vercel/
+
+# TypeScript
+
+*.tsbuildinfo
+
+# ------------------------------
+
+# Python
+
+# ------------------------------
+
+**pycache**/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Virtual environments
+
+.venv/
+venv/
+env/
+
+# Packaging
+
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Testing
+
+.coverage
+.coverage.*
+htmlcov/
+.pytest_cache/
+
+# ------------------------------
+
+# Firebase
+
+# ------------------------------
+
+.firebase/
+firebase-debug.log
+
+# ------------------------------
+
+# IDE / Editor
+
+# ------------------------------
+
+.vscode/
+.idea/
+*.iml
+
+# ------------------------------
+
+# OS / Misc
+
+# ------------------------------
+
+*.bak
+*.orig
+
+# ------------------------------
+
+# BMAD outputs (DECISIÓN)
+
+# ------------------------------
+
+# Mantenerlos versionados (comentado por defecto)
+
+# _bmad-output/
+
+# ------------------------------
+
+# Generated artifacts (optional)
+
+# ------------------------------
+
+storybook-static/
+coverage/
+
+# ------------------------------
+
+# Secrets / Keys
+
+# ------------------------------
+
+*.pem
+*.key
+*.crt
+*.p12
+
+# ------------------------------
+
+# Docker
+
+# ------------------------------
+
+docker-compose.override.yml
+.env.docker
+
+# ------------------------------
+
+# Local tooling
+
+# ------------------------------
+
+.cache/
+tmp/
