@@ -3,6 +3,7 @@ import react from "@vitejs/plugin-react";
 import path from "node:path";
 
 export default defineConfig({
+  // @ts-expect-error - Vite version mismatch between vitest (v5) and Storybook (v8)
   plugins: [react()],
   test: {
     environment: "jsdom",

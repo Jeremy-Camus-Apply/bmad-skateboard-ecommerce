@@ -61,6 +61,52 @@ jobs:
         env:
           NEXT_TELEMETRY_DISABLED: "1"
 
+  storybook-a11y:
+    name: storybook accessibility checks
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: skate-assistant-frontend
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9.11.0
+
+      - name: Set up Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: skate-assistant-frontend/pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build Storybook
+        run: pnpm build-storybook
+
+      - name: Verify build output
+        run: test -d storybook-static && test -f storybook-static/index.html
+
+      - name: Serve Storybook and run axe checks
+        run: |
+          npx http-server storybook-static --port 6006 &
+          HTTP_SERVER_PID=$!
+          npx wait-on http://127.0.0.1:6006 --timeout 30000
+          pnpm test-storybook
+          kill $HTTP_SERVER_PID || true
+
+      - name: Upload Storybook artifacts on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: storybook-output
+          path: skate-assistant-frontend/storybook-static/
+          retention-days: 7
+
   # Vercel handles the actual deploy via the Vercel-GitHub integration once
   # the Vercel team is provisioned (Story 1.1 cross-team coordination).
   # CI gates merges; Vercel deploys preview branches.
