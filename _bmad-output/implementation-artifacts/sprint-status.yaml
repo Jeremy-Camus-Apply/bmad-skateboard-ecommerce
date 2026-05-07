@@ -1,0 +1,111 @@
+# generated: 2026-05-06
+# last_updated: 2026-05-06 (Story 1.1 contexted; Epic 1 promoted to in-progress)
+# project: skate-ecommerce
+# project_key: NOKEY
+# tracking_system: file-system
+# story_location: _bmad-output/implementation-artifacts
+
+# STATUS DEFINITIONS:
+# ==================
+# Epic Status:
+#   - backlog: Epic not yet started
+#   - in-progress: Epic actively being worked on
+#   - done: All stories in epic completed
+#
+# Epic Status Transitions:
+#   - backlog → in-progress: Automatically when first story is created (via create-story)
+#   - in-progress → done: Manually when all stories reach 'done' status
+#
+# Story Status:
+#   - backlog: Story only exists in epic file
+#   - ready-for-dev: Story file created in stories folder
+#   - in-progress: Developer actively working on implementation
+#   - review: Ready for code review (via Dev's code-review workflow)
+#   - done: Story completed
+#
+# Retrospective Status:
+#   - optional: Can be completed but not required
+#   - done: Retrospective has been completed
+#
+# WORKFLOW NOTES:
+# ===============
+# - Epic transitions to 'in-progress' automatically when first story is created
+# - Stories can be worked in parallel if team capacity allows
+# - Developer typically creates next story after previous one is 'done' to incorporate learnings
+# - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
+
+generated: 2026-05-06
+last_updated: 2026-05-06
+project: skate-ecommerce
+project_key: NOKEY
+tracking_system: file-system
+story_location: _bmad-output/implementation-artifacts
+
+development_status:
+  # ========================================
+  # Epic 1: Anonymous Discovery → Cart (Maya's defining experience)
+  # ========================================
+  epic-1: in-progress
+  1-1-project-foundation-and-gcp-infrastructure: ready-for-dev
+  1-2-cloud-sql-provisioning-alembic-initial-schema-ci-gate: backlog
+  1-3-design-system-foundation: backlog
+  1-4-anonymous-session-chat-surface-shell: backlog
+  1-5-chat-turn-endpoint-sse-delivery-contract: backlog
+  1-6-intent-agent-vertex-gemini-flash-early-acknowledgement: backlog
+  1-7-catalog-read-parallel-retrieval-agents: backlog
+  1-8-compatibility-layer-schema-service-seed-rules-agent: backlog
+  1-9-explanation-agent-claude-sonnet-streaming-grounding: backlog
+  1-10-recommendation-components: backlog
+  1-11-setup-card-stack-signature-pattern: backlog
+  1-12-cart-add-flow: backlog
+  1-13-rate-limits-cost-caps-anonymous-abuse-mitigation: backlog
+  1-14-semantic-cache-memorystore-redis-vertex-embeddings: backlog
+  1-15-observability-foundation-langfuse-opentelemetry: backlog
+  1-16-eval-harness-scaffolding-gts-ci-gate: backlog
+  1-17-llm-circuit-breaker-degraded-mode-panel: backlog
+  1-18-pre-launch-hardening: backlog
+  epic-1-retrospective: optional
+
+  # ========================================
+  # Epic 2: Authenticated Continuity (Sam's journey)
+  # ========================================
+  epic-2: backlog
+  2-1-firebase-auth-integration-id-token-verification: backlog
+  2-2-firestore-session-message-persistence: backlog
+  2-3-cross-device-session-resume: backlog
+  2-4-history-based-personalization: backlog
+  2-5-conversation-history-opt-out-deletion: backlog
+  2-6-retention-job-pii-stripped-analytics: backlog
+  epic-2-retrospective: optional
+
+  # ========================================
+  # Epic 3: Honest Confidence & Refinement (Diego's journey)
+  # ========================================
+  epic-3: backlog
+  3-1-confidence-boundary-disclosure-honest-confidence-pattern: backlog
+  3-2-catalog-quality-backfill-queue: backlog
+  3-3-compatibility-layer-repair-reject-logic: backlog
+  3-4-clarification-turn-component-flow: backlog
+  3-5-refinement-turns: backlog
+  3-6-side-by-side-compare-turn: backlog
+  3-7-graceful-decline-off-topic-redirect: backlog
+  epic-3-retrospective: optional
+
+  # ========================================
+  # Epic 4: AI Operations Surfaces (Priya's journey)
+  # ========================================
+  epic-4: backlog
+  4-1-internal-admin-app-shell-auth: backlog
+  4-2-relevance-dashboard-component: backlog
+  4-3-per-agent-eval-slice-component: backlog
+  4-4-prompt-change-audit-log-component: backlog
+  epic-4-retrospective: optional
+
+  # ========================================
+  # Epic 5: Compatibility Rule Operations (Tariq's journey)
+  # ========================================
+  epic-5: backlog
+  5-1-rule-authoring-documentation-pr-template-lint: backlog
+  5-2-rule-firing-dashboard-component: backlog
+  5-3-rule-detail-component-version-history: backlog
+  epic-5-retrospective: optional
