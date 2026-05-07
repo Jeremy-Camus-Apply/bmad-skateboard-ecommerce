@@ -19,3 +19,27 @@ variable "environment" {
     error_message = "environment must be one of: dev, staging, prod"
   }
 }
+
+variable "cloud_sql_tier" {
+  description = "Cloud SQL primary tier."
+  type        = string
+  default     = "db-custom-2-7680"
+}
+
+variable "cloud_sql_read_replica_tier" {
+  description = "Cloud SQL read replica tier."
+  type        = string
+  default     = "db-custom-2-7680"
+}
+
+variable "cloud_sql_database_name" {
+  description = "Assistant Cloud SQL database name."
+  type        = string
+  default     = "assistant"
+}
+
+variable "cloud_sql_deletion_protection" {
+  description = "Protect Cloud SQL resources from accidental terraform destroy."
+  type        = bool
+  default     = true
+}

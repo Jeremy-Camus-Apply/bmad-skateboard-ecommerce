@@ -47,7 +47,7 @@ development_status:
   # ========================================
   epic-1: in-progress
   1-1-project-foundation-and-gcp-infrastructure: done
-  1-2-cloud-sql-provisioning-alembic-initial-schema-ci-gate: ready-for-dev
+  1-2-cloud-sql-provisioning-alembic-initial-schema-ci-gate: review
   1-3-design-system-foundation: backlog
   1-4-anonymous-session-chat-surface-shell: backlog
   1-5-chat-turn-endpoint-sse-delivery-contract: backlog

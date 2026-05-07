@@ -37,6 +37,7 @@ Infrastructure-as-Code for the Skate Assistant. **Story 1.1 ships the code; `ter
 - `terraform/modules/secrets/` — Secret Manager + placeholder secrets (empty versions added out-of-band)
 - `terraform/modules/artifact-registry/` — Docker repo for backend images
 - `terraform/modules/iam/` — `cloud-run-runtime`, `ci`, `migration-job` service accounts (least-privilege)
+- `terraform/modules/cloud-sql/` — PostgreSQL 16 primary (regional HA) + read replica + private IP + backup/PITR
 - `github/workload-identity.tf` — GitHub OIDC → `ci` SA federation (apply after main config)
 
 ## Cross-team coordination required before apply (Story 1.1 Dev Notes)

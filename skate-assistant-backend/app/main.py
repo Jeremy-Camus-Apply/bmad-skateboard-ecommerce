@@ -23,6 +23,7 @@ from app.observability.logging import (
     request_path_ctx,
     request_status_ctx,
 )
+from app.services.schema_version import validate_schema_compatibility
 
 logger = logging.getLogger(__name__)
 
@@ -108,6 +109,8 @@ class RequestContextMiddleware(BaseHTTPMiddleware):
 async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     configure_logging()
     provider = init_tracing(app)
+    applied_schema = await validate_schema_compatibility()
+    logger.info("schema_validation_passed", extra={"schema_version": applied_schema})
     logger.info("startup_complete")
     try:
         yield
