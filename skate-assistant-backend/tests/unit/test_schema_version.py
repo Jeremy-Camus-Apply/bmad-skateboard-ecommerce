@@ -42,6 +42,21 @@ async def test_validate_schema_compatibility_raises_on_drift(
         await schema_version.validate_schema_compatibility()
 
 
+@pytest.mark.asyncio
+async def test_validate_schema_compatibility_raises_when_no_applied_revision(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(schema_version, "get_expected_schema_version", lambda: "20260507_0001")
+
+    async def _fake_current() -> None:
+        return None
+
+    monkeypatch.setattr(schema_version, "get_current_db_schema_version", _fake_current)
+
+    with pytest.raises(RuntimeError, match="no applied Alembic revision"):
+        await schema_version.validate_schema_compatibility()
+
+
 def test_migration_has_upgrade_and_downgrade_contract() -> None:
     migration_file = (
         Path(__file__).resolve().parents[2]

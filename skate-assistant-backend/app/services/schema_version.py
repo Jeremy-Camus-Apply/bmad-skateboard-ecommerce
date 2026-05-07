@@ -7,6 +7,7 @@ from pathlib import Path
 
 from alembic.config import Config
 from alembic.script import ScriptDirectory
+from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import create_async_engine
 
@@ -27,6 +28,8 @@ def get_expected_schema_version() -> str | None:
         return None
 
     config = Config(str(alembic_ini))
+    # Force absolute script path so resolution is independent of process CWD.
+    config.set_main_option("script_location", str(alembic_ini.parent / "migrations"))
     script = ScriptDirectory.from_config(config)
     return script.get_current_head()
 
@@ -44,6 +47,9 @@ async def get_current_db_schema_version() -> str | None:
             if row is None:
                 return None
             return str(row[0])
+    except SQLAlchemyError:
+        logger.exception("schema_version_query_failed")
+        return None
     finally:
         await engine.dispose()
 
@@ -56,6 +62,11 @@ async def validate_schema_compatibility() -> str | None:
         return None
 
     current = await get_current_db_schema_version()
+    if current is None:
+        raise RuntimeError(
+            "Schema drift detected: no applied Alembic revision found in database. "
+            "Run migrations before starting the service."
+        )
     if current != expected:
         raise RuntimeError(
             "Schema drift detected: "

@@ -3,18 +3,33 @@
 from __future__ import annotations
 
 import pytest
+from app.main import create_app
 from fastapi import HTTPException
-from httpx import AsyncClient
+from httpx import ASGITransport, AsyncClient
 
 
 @pytest.fixture
-async def client_with_error_routes(client: AsyncClient) -> AsyncClient:
+async def client_no_schema_guard(monkeypatch: pytest.MonkeyPatch) -> AsyncClient:
+    import app.main as main_module
+
+    async def _fake_schema_check() -> str:
+        return "20260507_0001"
+
+    monkeypatch.setattr(main_module, "validate_schema_compatibility", _fake_schema_check)
+    app = create_app()
+    transport = ASGITransport(app=app, raise_app_exceptions=False)
+    async with AsyncClient(transport=transport, base_url="http://testserver") as ac:
+        yield ac
+
+
+@pytest.fixture
+async def client_with_error_routes(client_no_schema_guard: AsyncClient) -> AsyncClient:
     """Add a couple of error-producing routes onto the same app for smoke coverage.
 
     We mutate the underlying app via the transport so we don't need a separate
     factory. The routes are scoped to this test only.
     """
-    app = client._transport.app  # type: ignore[attr-defined]
+    app = client_no_schema_guard._transport.app  # type: ignore[attr-defined]
 
     @app.get("/_test/raise-http")
     async def _raise_http() -> None:
@@ -24,7 +39,7 @@ async def client_with_error_routes(client: AsyncClient) -> AsyncClient:
     async def _raise_unhandled() -> None:
         raise RuntimeError("boom")
 
-    return client
+    return client_no_schema_guard
 
 
 @pytest.mark.asyncio

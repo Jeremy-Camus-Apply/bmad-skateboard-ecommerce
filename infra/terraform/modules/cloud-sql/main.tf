@@ -45,6 +45,10 @@ variable "deletion_protection" {
   default     = true
 }
 
+locals {
+  resource_prefix = "skate-assistant-${var.environment}"
+}
+
 resource "google_project_service" "service_networking" {
   project = var.project_id
   service = "servicenetworking.googleapis.com"
@@ -57,7 +61,7 @@ resource "google_project_service" "sqladmin" {
 
 resource "google_compute_global_address" "private_service_range" {
   project       = var.project_id
-  name          = "skate-assistant-sql-range"
+  name          = "${local.resource_prefix}-sql-range"
   purpose       = "VPC_PEERING"
   address_type  = "INTERNAL"
   prefix_length = 16
@@ -74,7 +78,7 @@ resource "google_service_networking_connection" "private_vpc_connection" {
 
 resource "google_sql_database_instance" "primary" {
   project          = var.project_id
-  name             = "skate-assistant-pg-primary"
+  name             = "${local.resource_prefix}-pg-primary"
   region           = var.region
   database_version = var.database_version
 
@@ -110,7 +114,7 @@ resource "google_sql_database_instance" "primary" {
 
 resource "google_sql_database_instance" "read_replica" {
   project             = var.project_id
-  name                = "skate-assistant-pg-read-replica"
+  name                = "${local.resource_prefix}-pg-read-replica"
   region              = var.region
   database_version    = var.database_version
   master_instance_name = google_sql_database_instance.primary.name
@@ -140,12 +144,26 @@ resource "google_sql_user" "assistant_read_only" {
   project  = var.project_id
   instance = google_sql_database_instance.primary.name
   name     = "assistant_read_only"
+  password = random_password.assistant_read_only.result
 }
 
 resource "google_sql_user" "assistant_read_write" {
   project  = var.project_id
   instance = google_sql_database_instance.primary.name
   name     = "assistant_read_write"
+  password = random_password.assistant_read_write.result
+}
+
+resource "random_password" "assistant_read_only" {
+  length           = 32
+  special          = true
+  override_special = "_%@"
+}
+
+resource "random_password" "assistant_read_write" {
+  length           = 32
+  special          = true
+  override_special = "_%@"
 }
 
 output "primary_instance_name" {
@@ -166,4 +184,14 @@ output "read_replica_instance_name" {
 
 output "database_name" {
   value = google_sql_database.assistant.name
+}
+
+output "assistant_read_only_password" {
+  value     = random_password.assistant_read_only.result
+  sensitive = true
+}
+
+output "assistant_read_write_password" {
+  value     = random_password.assistant_read_write.result
+  sensitive = true
 }
