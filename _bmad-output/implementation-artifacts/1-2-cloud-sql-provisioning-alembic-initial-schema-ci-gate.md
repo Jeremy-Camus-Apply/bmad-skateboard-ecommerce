@@ -1,6 +1,6 @@
 # Story 1.2: Cloud SQL Provisioning + Alembic Initial Schema + CI Gate
 
-Status: review
+Status: done
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
