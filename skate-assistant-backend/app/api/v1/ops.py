@@ -6,6 +6,7 @@ from fastapi import APIRouter
 from pydantic import BaseModel
 
 from app.config import get_settings
+from app.services.schema_version import get_expected_schema_version
 
 router = APIRouter(tags=["ops"])
 
@@ -17,12 +18,8 @@ class HealthResponse(BaseModel):
 
 
 def _alembic_revision() -> str | None:
-    """Return current Alembic head revision, or None if no schema yet.
-
-    Story 1.1 leaves migrations/versions empty by design (Story 1.2 fills it).
-    Returning None now keeps the JSON shape stable for downstream stories.
-    """
-    return None
+    """Return expected Alembic schema revision from local migration scripts."""
+    return get_expected_schema_version()
 
 
 @router.get("/health", response_model=HealthResponse)

@@ -3,6 +3,11 @@
 # are NEVER granted here — escalate before adding any role not in the matrix.
 
 variable "project_id" { type = string }
+variable "enable_migration_cloudsql_role" {
+  description = "Grant roles/cloudsql.client to migration-job SA when Cloud SQL is provisioned."
+  type        = bool
+  default     = false
+}
 
 # ── cloud-run-runtime ───────────────────────────────────────────────
 resource "google_service_account" "cloud_run_runtime" {
@@ -59,6 +64,14 @@ resource "google_service_account" "migration_job" {
   account_id   = "migration-job"
   display_name = "Alembic migration job"
   description  = "Runs Alembic migrations against Cloud SQL (Story 1.2+)."
+}
+
+resource "google_project_iam_member" "migration_job_cloudsql_client" {
+  count = var.enable_migration_cloudsql_role ? 1 : 0
+
+  project = var.project_id
+  role    = "roles/cloudsql.client"
+  member  = "serviceAccount:${google_service_account.migration_job.email}"
 }
 
 # ── Outputs ─────────────────────────────────────────────────────────

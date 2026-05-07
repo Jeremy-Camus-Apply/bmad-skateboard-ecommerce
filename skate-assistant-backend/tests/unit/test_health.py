@@ -14,8 +14,7 @@ async def test_health_returns_expected_shape(client: AsyncClient) -> None:
     payload = response.json()
     assert payload["status"] == "ok"
     assert "version" in payload
-    # schema_version is null in Story 1.1; Story 1.2 fills it from Alembic.
-    assert payload["schema_version"] is None
+    assert payload["schema_version"] == "20260507_0001"
 
 
 @pytest.mark.asyncio

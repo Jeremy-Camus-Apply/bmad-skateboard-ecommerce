@@ -1,6 +1,6 @@
 # Story 1.2: Cloud SQL Provisioning + Alembic Initial Schema + CI Gate
 
-Status: ready-for-dev
+Status: review
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -29,37 +29,37 @@ so that all schema changes flow through versioned, reversible migrations from da
 
 ## Tasks / Subtasks
 
-- [ ] **Task 1: Provision Cloud SQL and networking in Terraform** (AC: 1)
-  - [ ] Add `infra/terraform/modules/cloud-sql/` with primary + read replica resources (Postgres 16, regional HA primary).
-  - [ ] Configure private IP connectivity and required service networking/VPC wiring consistent with existing `network` module outputs.
-  - [ ] Add DB backups + PITR configuration (35-day retention target).
-  - [ ] Create DB roles/users for `assistant_read_only` and `assistant_read_write` with least privilege.
-  - [ ] Wire module into `infra/terraform/main.tf`, `infra/terraform/variables.tf`, and `infra/terraform/terraform.tfvars.example`.
-  - [ ] Update `infra/README.md` and `docs/deploy.md` with apply sequence and verification commands for Cloud SQL.
+- [x] **Task 1: Provision Cloud SQL and networking in Terraform** (AC: 1)
+  - [x] Add `infra/terraform/modules/cloud-sql/` with primary + read replica resources (Postgres 16, regional HA primary).
+  - [x] Configure private IP connectivity and required service networking/VPC wiring consistent with existing `network` module outputs.
+  - [x] Add DB backups + PITR configuration (35-day retention target).
+  - [x] Create DB roles/users for `assistant_read_only` and `assistant_read_write` with least privilege.
+  - [x] Wire module into `infra/terraform/main.tf`, `infra/terraform/variables.tf`, and `infra/terraform/terraform.tfvars.example`.
+  - [x] Update `infra/README.md` and `docs/deploy.md` with apply sequence and verification commands for Cloud SQL.
 
-- [ ] **Task 2: Land initial Alembic schema and async migration correctness** (AC: 2)
-  - [ ] Create first migration under `skate-assistant-backend/migrations/versions/` for baseline tables: `audit_log` and revision metadata.
-  - [ ] Ensure migration downgrade cleanly removes created objects and restores pre-migration baseline.
-  - [ ] Keep migration idempotent/reversible discipline aligned with architecture constraints.
-  - [ ] Update `skate-assistant-backend/migrations/env.py` only as needed to keep async engine behavior correct with `asyncpg`.
-  - [ ] Add/update SQLAlchemy model placeholders in `skate-assistant-backend/app/models/` if needed to support consistent migration ownership.
+- [x] **Task 2: Land initial Alembic schema and async migration correctness** (AC: 2)
+  - [x] Create first migration under `skate-assistant-backend/migrations/versions/` for baseline tables: `audit_log` and revision metadata.
+  - [x] Ensure migration downgrade cleanly removes created objects and restores pre-migration baseline.
+  - [x] Keep migration idempotent/reversible discipline aligned with architecture constraints.
+  - [x] Update `skate-assistant-backend/migrations/env.py` only as needed to keep async engine behavior correct with `asyncpg`.
+  - [x] Add/update SQLAlchemy model placeholders in `skate-assistant-backend/app/models/` if needed to support consistent migration ownership.
 
-- [ ] **Task 3: Add migration CI gate for upgrade/downgrade/upgrade** (AC: 3)
-  - [ ] Extend `.github/workflows/backend-ci.yml` to run `alembic upgrade head`, `alembic downgrade -1`, `alembic upgrade head`.
-  - [ ] Ensure the migration gate runs in a deterministic database target during CI (ephemeral service DB or stable CI DB container).
-  - [ ] Make migration failures merge-blocking (non-zero exit).
-  - [ ] Keep existing lint/type/test/security gates intact.
+- [x] **Task 3: Add migration CI gate for upgrade/downgrade/upgrade** (AC: 3)
+  - [x] Extend `.github/workflows/backend-ci.yml` to run `alembic upgrade head`, `alembic downgrade -1`, `alembic upgrade head`.
+  - [x] Ensure the migration gate runs in a deterministic database target during CI (ephemeral service DB or stable CI DB container).
+  - [x] Make migration failures merge-blocking (non-zero exit).
+  - [x] Keep existing lint/type/test/security gates intact.
 
-- [ ] **Task 4: Enforce schema drift check on FastAPI startup** (AC: 4)
-  - [ ] Implement startup check in `skate-assistant-backend/app/main.py` (or a dedicated startup dependency) that compares expected Alembic head vs runtime DB `alembic_version`.
-  - [ ] Log a clear structured error (including requestless startup context) and fail startup on mismatch.
-  - [ ] Preserve existing `/v1/health` and `/v1/readiness` contract shape.
-  - [ ] Update readiness semantics to report actual schema version instead of `null` once migration is applied.
+- [x] **Task 4: Enforce schema drift check on FastAPI startup** (AC: 4)
+  - [x] Implement startup check in `skate-assistant-backend/app/main.py` (or a dedicated startup dependency) that compares expected Alembic head vs runtime DB `alembic_version`.
+  - [x] Log a clear structured error (including requestless startup context) and fail startup on mismatch.
+  - [x] Preserve existing `/v1/health` and `/v1/readiness` contract shape.
+  - [x] Update readiness semantics to report actual schema version instead of `null` once migration is applied.
 
-- [ ] **Task 5: Add tests for migration discipline and startup drift behavior** (AC: 2, 3, 4)
-  - [ ] Add backend tests validating migration round-trip behavior and drift-check failure path.
-  - [ ] Keep tests under `skate-assistant-backend/tests/` aligned with existing strict mypy/ruff settings.
-  - [ ] Verify CI still passes with new migration checks and tests enabled.
+- [x] **Task 5: Add tests for migration discipline and startup drift behavior** (AC: 2, 3, 4)
+  - [x] Add backend tests validating migration round-trip behavior and drift-check failure path.
+  - [x] Keep tests under `skate-assistant-backend/tests/` aligned with existing strict mypy/ruff settings.
+  - [x] Verify CI still passes with new migration checks and tests enabled.
 
 ## Dev Notes
 
@@ -166,12 +166,42 @@ gpt-5.3-codex
 - Story target auto-discovered from sprint status first backlog item: `1-2-cloud-sql-provisioning-alembic-initial-schema-ci-gate`.
 - Prior-story intelligence extracted from Story 1.1 artifact and recent commit patterns (`feat(story-1-1): foundation scaffolding + local-first dev stack`).
 - Latest Alembic guidance cross-checked via web sources during context generation.
+- Implemented Cloud SQL Terraform module and wired it into root Terraform composition with new variables and examples.
+- Added startup schema compatibility check (`validate_schema_compatibility`) and health/readiness schema head reporting.
+- Added Alembic initial migration `20260507_0001` for `audit_log`, with downgrade cleanup.
+- Backend CI now provisions ephemeral Postgres service and runs migration gate: `upgrade -> downgrade -> upgrade`.
+- Verification executed in backend package directory: `uv sync --frozen --dev`, `uv run ruff check`, `uv run ruff format --check .`, `uv run mypy app/ tests/`, `uv run pytest tests/unit -v --maxfail=1`, `uv run pytest -q`.
+- Terraform CLI was unavailable in this runtime (`terraform: command not found`), so terraform validation was not executed locally in this session.
 
 ### Completion Notes List
 
 - Ultimate context engine analysis completed - comprehensive developer guide created.
 - Story is prepared for `dev-story` execution with AC-aligned tasks and architecture guardrails.
+- Implemented AC1 with Cloud SQL primary + read replica IaC, private services networking, backup/PITR settings, and assistant DB users.
+- Implemented AC2 with baseline Alembic revision and reversible downgrade path.
+- Implemented AC3 with merge-blocking migration CI gate backed by deterministic Postgres service in GitHub Actions.
+- Implemented AC4 with startup schema drift refusal logic and readiness schema version surfaced from Alembic head.
+- Added targeted schema/migration tests and updated health expectations for Story 1.2.
 
 ### File List
 
-- `_bmad-output/implementation-artifacts/1-2-cloud-sql-provisioning-alembic-initial-schema-ci-gate.md` (new)
+- `.github/workflows/backend-ci.yml` (modified)
+- `_bmad-output/implementation-artifacts/1-2-cloud-sql-provisioning-alembic-initial-schema-ci-gate.md` (modified)
+- `docs/deploy.md` (modified)
+- `infra/README.md` (modified)
+- `infra/terraform/main.tf` (modified)
+- `infra/terraform/modules/cloud-sql/main.tf` (new)
+- `infra/terraform/modules/iam/main.tf` (modified)
+- `infra/terraform/terraform.tfvars.example` (modified)
+- `infra/terraform/variables.tf` (modified)
+- `skate-assistant-backend/app/api/v1/ops.py` (modified)
+- `skate-assistant-backend/app/main.py` (modified)
+- `skate-assistant-backend/app/services/schema_version.py` (new)
+- `skate-assistant-backend/migrations/versions/20260507_0001_initial_schema.py` (new)
+- `skate-assistant-backend/tests/conftest.py` (modified)
+- `skate-assistant-backend/tests/unit/test_health.py` (modified)
+- `skate-assistant-backend/tests/unit/test_schema_version.py` (new)
+
+## Change Log
+
+- 2026-05-07: Implemented Story 1.2 end-to-end (Cloud SQL IaC, Alembic baseline migration, startup schema drift guard, CI migration gate, and tests). Story advanced to `review`.

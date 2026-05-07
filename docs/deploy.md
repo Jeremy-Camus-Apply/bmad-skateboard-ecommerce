@@ -98,6 +98,23 @@ Activates when the platform team confirms:
 
 4. **Uncomment the `deploy-staging` job** in `.github/workflows/backend-ci.yml`. Push the first revision and verify in Cloud Run console.
 
+### Cloud SQL verification (Story 1.2)
+
+After `infra/terraform` apply:
+
+```bash
+gcloud sql instances list --project <project-id>
+gcloud sql users list --instance skate-assistant-pg-primary --project <project-id>
+gcloud sql databases list --instance skate-assistant-pg-primary --project <project-id>
+```
+
+Expected:
+
+- Primary instance `skate-assistant-pg-primary` and read replica `skate-assistant-pg-read-replica`
+- Private IP-only networking
+- Backup + PITR enabled (35 retained backups)
+- DB users present: `assistant_read_only`, `assistant_read_write`
+
 5. **Vercel:** install the Vercel-GitHub integration on the org, point it at `skate-assistant-frontend/` with the working dir set, add `NEXT_PUBLIC_API_BASE_URL` env var pointing at the staging Cloud Run URL.
 
 ### Where things live (cloud)

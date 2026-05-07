@@ -37,6 +37,20 @@ jobs:
   lint-typecheck-test:
     name: lint / typecheck / test
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: pgvector/pgvector:pg16
+        env:
+          POSTGRES_USER: assistant
+          POSTGRES_PASSWORD: assistant
+          POSTGRES_DB: assistant
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U assistant -d assistant"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 12
     steps:
       - uses: actions/checkout@v4
 
@@ -51,6 +65,8 @@ jobs:
 
       - name: Install dependencies
         run: uv sync --frozen --dev
+        env:
+          DATABASE_URL: postgresql+asyncpg://assistant:assistant@127.0.0.1:5432/assistant
 
       - name: Ruff lint
         run: uv run ruff check
@@ -63,6 +79,16 @@ jobs:
 
       - name: Pytest unit
         run: uv run pytest tests/unit -v --maxfail=1
+        env:
+          DATABASE_URL: postgresql+asyncpg://assistant:assistant@127.0.0.1:5432/assistant
+
+      - name: Alembic migration gate (upgrade / downgrade / upgrade)
+        run: |
+          uv run alembic upgrade head
+          uv run alembic downgrade -1
+          uv run alembic upgrade head
+        env:
+          DATABASE_URL: postgresql+asyncpg://assistant:assistant@127.0.0.1:5432/assistant
 
   container-build-and-scan:
     name: container build + Trivy scan

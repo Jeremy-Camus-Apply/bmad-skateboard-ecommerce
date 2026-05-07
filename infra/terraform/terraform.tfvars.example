@@ -4,3 +4,9 @@
 project_id  = "skate-assistant-staging"
 region      = "us-central1"
 environment = "staging"
+
+# Cloud SQL (Story 1.2)
+cloud_sql_tier               = "db-custom-2-7680"
+cloud_sql_read_replica_tier  = "db-custom-2-7680"
+cloud_sql_database_name      = "assistant"
+cloud_sql_deletion_protection = true
