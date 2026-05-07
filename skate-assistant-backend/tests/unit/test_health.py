@@ -6,8 +6,7 @@ from collections.abc import AsyncIterator
 
 import pytest
 from app.main import create_app
-from httpx import ASGITransport
-from httpx import AsyncClient
+from httpx import ASGITransport, AsyncClient
 
 
 @pytest.fixture
@@ -22,9 +21,7 @@ async def client_no_schema_guard(monkeypatch: pytest.MonkeyPatch) -> AsyncIterat
         return "20260507_0001"
 
     monkeypatch.setattr(main_module, "validate_schema_compatibility", _fake_schema_check)
-    monkeypatch.setattr(
-        ops_module, "get_current_db_schema_version", _fake_current_schema_version
-    )
+    monkeypatch.setattr(ops_module, "get_current_db_schema_version", _fake_current_schema_version)
 
     app = create_app()
     transport = ASGITransport(app=app, raise_app_exceptions=False)

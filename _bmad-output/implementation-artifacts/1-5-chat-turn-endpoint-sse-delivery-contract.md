@@ -1,6 +1,6 @@
 # Story 1.5: Chat Turn Endpoint + SSE Delivery Contract
 
-Status: ready-for-dev
+Status: review
 
 ## Story
 

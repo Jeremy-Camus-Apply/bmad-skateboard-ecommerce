@@ -6,7 +6,6 @@ import importlib.util
 from pathlib import Path
 
 import pytest
-
 from app.services import schema_version
 
 
@@ -59,25 +58,23 @@ async def test_validate_schema_compatibility_raises_when_no_applied_revision(
 
 def test_migration_has_upgrade_and_downgrade_contract() -> None:
     migration_file = (
-        Path(__file__).resolve().parents[2]
-        / "migrations/versions/20260507_0001_initial_schema.py"
+        Path(__file__).resolve().parents[2] / "migrations/versions/20260507_0001_initial_schema.py"
     )
     content = migration_file.read_text(encoding="utf-8")
     assert "def upgrade()" in content
     assert "def downgrade()" in content
     assert "op.create_table(" in content
     assert "audit_log" in content
-    assert "op.drop_table(\"audit_log\")" in content
+    assert 'op.drop_table("audit_log")' in content
 
 
 def test_migration_module_importable() -> None:
     migration_file = (
-        Path(__file__).resolve().parents[2]
-        / "migrations/versions/20260507_0001_initial_schema.py"
+        Path(__file__).resolve().parents[2] / "migrations/versions/20260507_0001_initial_schema.py"
     )
     spec = importlib.util.spec_from_file_location("story12_migration", migration_file)
     assert spec is not None
     assert spec.loader is not None
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
-    assert getattr(module, "revision") == "20260507_0001"
+    assert module.revision == "20260507_0001"
