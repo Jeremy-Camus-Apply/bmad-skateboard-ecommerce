@@ -1,5 +1,5 @@
 # generated: 2026-05-06
-# last_updated: 2026-05-06 (Story 1.1 contexted; Epic 1 promoted to in-progress)
+# last_updated: 2026-05-07 (Story 1.1 → done after code review patch round; cloud follow-up tracked separately)
 # project: skate-ecommerce
 # project_key: NOKEY
 # tracking_system: file-system
@@ -35,7 +35,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 
 generated: 2026-05-06
-last_updated: 2026-05-06
+last_updated: 2026-05-07
 project: skate-ecommerce
 project_key: NOKEY
 tracking_system: file-system
@@ -46,7 +46,7 @@ development_status:
   # Epic 1: Anonymous Discovery → Cart (Maya's defining experience)
   # ========================================
   epic-1: in-progress
-  1-1-project-foundation-and-gcp-infrastructure: ready-for-dev
+  1-1-project-foundation-and-gcp-infrastructure: done
   1-2-cloud-sql-provisioning-alembic-initial-schema-ci-gate: backlog
   1-3-design-system-foundation: backlog
   1-4-anonymous-session-chat-surface-shell: backlog

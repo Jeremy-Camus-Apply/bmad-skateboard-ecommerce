@@ -1,0 +1,9 @@
+# Copy to terraform.tfvars (gitignored) and fill in.
+# Run AFTER infra/terraform/ is applied — `ci_service_account_email` is one
+# of its outputs.
+
+project_id               = "skate-assistant-staging"
+github_repository        = "your-org/skate-ecommerce"
+
+# Get this from: cd ../terraform && terraform output -raw ci_email
+ci_service_account_email = "ci@skate-assistant-staging.iam.gserviceaccount.com"
