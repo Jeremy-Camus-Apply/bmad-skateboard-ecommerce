@@ -41,6 +41,11 @@ class Settings(BaseSettings):
     secret_langfuse_api_key: str = ""
     secret_anonymous_jwt_signing: str = ""
 
+    #: SSE comment heartbeat interval during idle waits (seconds).
+    chat_turn_heartbeat_seconds: float = Field(default=15.0, ge=0.05, le=120.0)
+    #: Abandoned-turn TTL from last activity (seconds).
+    chat_turn_ttl_seconds: float = Field(default=300.0, ge=60.0, le=3600.0)
+
     firebase_auth_emulator_host: str = ""
     firestore_emulator_host: str = ""
 
