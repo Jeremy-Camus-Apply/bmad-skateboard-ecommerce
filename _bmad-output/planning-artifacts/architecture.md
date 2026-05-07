@@ -575,6 +575,7 @@ These patterns are non-negotiable defaults for every AI implementation agent. Th
 | What | Convention | Example |
 |---|---|---|
 | Component files | `PascalCase.tsx` | `SetupCardStack.tsx` |
+| shadcn primitives in `components/ui/` | lowercase, per shadcn-cli convention (carve-out) | `button.tsx`, `input.tsx`, `dialog.tsx` |
 | Hook files | `kebab-case.ts` with `use-` prefix | `use-streaming-text.ts` |
 | Utility files | `kebab-case.ts` | `sse-consumer.ts` |
 | Components | `PascalCase` | `<SetupCardStack />` |

@@ -3,7 +3,22 @@
     "allow": [
       "Bash(python3 *)",
       "WebSearch",
-      "Bash(awk '{print $NF, $5}')"
+      "Bash(awk '{print $NF, $5}')",
+      "Bash(pnpm --version)",
+      "Bash(uv --version)",
+      "Bash(docker --version)",
+      "Bash(terraform --version)",
+      "Bash(uv sync *)",
+      "Bash(uv run *)",
+      "Bash(pnpm install *)",
+      "Bash(pnpm typecheck *)",
+      "Bash(pnpm lint *)",
+      "Bash(pnpm test:unit)",
+      "Bash(pnpm build *)",
+      "Bash(git add *)",
+      "Bash(git diff *)",
+      "Read(/tmp/**)",
+      "Bash(gh auth *)"
     ]
   }
 }

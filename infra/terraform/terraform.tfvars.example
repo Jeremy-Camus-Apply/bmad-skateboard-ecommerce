@@ -1,0 +1,6 @@
+# Copy to terraform.tfvars (gitignored) and fill in.
+# Confirm project + region with the platform team before applying.
+
+project_id  = "skate-assistant-staging"
+region      = "us-central1"
+environment = "staging"

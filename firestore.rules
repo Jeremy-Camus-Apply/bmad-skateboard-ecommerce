@@ -1,0 +1,17 @@
+// Production-grade Firestore rules — STRICT DENY by default.
+//
+// Real rules with auth-aware allow paths land in Story 2.2 (Firestore session
+// + message persistence). Until then, deploying this file is safe: no document
+// is readable or writable.
+//
+// The local emulator uses firestore.rules.local (permissive) via firebase.json.
+// `firebase deploy --only firestore:rules` targets THIS file, never the .local one.
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

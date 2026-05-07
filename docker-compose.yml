@@ -1,0 +1,123 @@
+# Local-first development stack for the Skate Assistant.
+#
+# Story 1.1 deliberately keeps cloud out of the loop:
+#   - Postgres + pgvector locally (Cloud SQL provisions in Story 1.2)
+#   - Redis locally (Memorystore wires in Story 1.13/1.14)
+#   - Firebase emulator (auth + firestore) for offline auth flows
+#   - Backend + frontend rebuild from local Dockerfiles
+#
+# Bring everything up:
+#   docker compose up
+# Or just the data plane:
+#   docker compose up postgres redis firebase-emulator
+
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: assistant
+      POSTGRES_PASSWORD: assistant
+      POSTGRES_DB: assistant
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U assistant -d assistant"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes"]
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  # Firebase emulator suite — auth + firestore only for now.
+  # Uses firebase.local.json (permissive rules); firebase.json holds the
+  # strict-deny production rules and is what `firebase deploy` would target.
+  firebase-emulator:
+    image: andreysenov/firebase-tools:13.29.1
+    restart: unless-stopped
+    command:
+      [
+        "firebase",
+        "emulators:start",
+        "--config=firebase.local.json",
+        "--only=auth,firestore",
+        "--project=skate-assistant-local",
+      ]
+    healthcheck:
+      test:
+        ["CMD-SHELL", "wget -q -O- http://localhost:9099 >/dev/null || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 20s
+    ports:
+      - "9099:9099"   # auth
+      - "8080:8080"   # firestore
+      - "4000:4000"   # emulator UI
+    volumes:
+      - ./firebase.local.json:/home/node/firebase.local.json:ro
+      - ./.firebaserc:/home/node/.firebaserc:ro
+      - ./firestore.rules.local:/home/node/firestore.rules.local:ro
+
+  backend:
+    build:
+      context: ./skate-assistant-backend
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      firebase-emulator:
+        condition: service_healthy
+    env_file:
+      - ./skate-assistant-backend/.env.example
+    environment:
+      ENVIRONMENT: local
+      DATABASE_URL: postgresql+asyncpg://assistant:assistant@postgres:5432/assistant
+      REDIS_URL: redis://redis:6379/0
+      OTEL_TRACES_EXPORTER: console
+      FIREBASE_AUTH_EMULATOR_HOST: firebase-emulator:9099
+      FIRESTORE_EMULATOR_HOST: firebase-emulator:8080
+    healthcheck:
+      test:
+        ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:8080/v1/health', timeout=3).read()\" || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 15s
+    ports:
+      - "8000:8080"
+
+  frontend:
+    build:
+      context: ./skate-assistant-frontend
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_healthy
+    environment:
+      NEXT_PUBLIC_API_BASE_URL: http://localhost:8000
+      NEXT_PUBLIC_FIREBASE_AUTH_EMULATOR_HOST: http://localhost:9099
+    ports:
+      - "3000:3000"
+
+volumes:
+  postgres-data:
+  redis-data:
